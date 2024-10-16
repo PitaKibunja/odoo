@@ -1,0 +1,65 @@
+[33mcommit b4a0212c364af1d2dab762a57e1abf23b426132f[m[33m ([m[1;34mgrafted[m[33m, [m[1;36mHEAD -> [m[1;32m17.0[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/17.0[m[33m)[m
+Author: jorv-odoo <jorv@odoo.com>
+Date:   Fri Sep 27 14:08:50 2024 +0200
+
+    [FIX] mail : force all companies at first alias domain init
+    
+    Context:
+    
+    The `create` method in the `mail.alias.domain` model currently
+    tries to make the created alias domain record the default for all
+    companies and `mail.alias` records, if it's the "first" of it's kind
+    to be created.
+    
+    But in it's current form it fails to account for grandfathered databases
+    (pre 17.0) or miss configuration by a user, where we have archived companies
+    attached to `mail.alias` where the `alias_domain_id` field is False.
+    
+    In such an edge case, it is impossible to create an alias domain record,
+    because during the save (create), the user is faced with a Validation
+    Error produced by the checks in the `_check_alias_domain_id_mc` in the
+    `mail.alias` model.
+    
+    Example error message:
+    ```
+    "We could not create alias archived-company-alias@example.com because
+    domain example.com belongs to company ActiveCompany while the owner
+    document belongs to company ArchivedCompany."
+    ```
+    
+    It follows that the user is blocked from setting up an alias domain
+    unless they temporarily unarchive all companies affecting the error.
+    
+    Proposed solution:
+    
+    Assuming that the objective is to initialize all current mail aliases
+    in the DB with the "first" alias domain record to be created, we
+    should force the `company_ids` field in the just created
+    `mail_alias_domain` record to contain ALL companies (active or not).
+    
+    Reproduction steps:
+    
+    One way to reproduce the issue on a fresh DB is:
+    - install mail
+    - define a domain alias in the general settings
+    - create a second company
+    - install Accounting
+    - make sure a localization pack is loaded for each company
+        (the idea is to create default sale and purchase accounting
+        journals with their email alias)
+    - archive second company
+    - in Technical > Aliases menu, clear alias domain from aliases (set
+    `alias_domain_id` = False)
+    - delete alias domain
+    - create a new alias domain
+    
+    --> Validation Error
+    
+    Review:
+    Added TDE's feedback on tests
+    
+    OPW-3955936
+    
+    closes odoo/odoo#169613
+    
+    Signed-off-by: Thibault Delavallee (tde) <tde@openerp.com>
