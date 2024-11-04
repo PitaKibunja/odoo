@@ -18,6 +18,9 @@
             <form string="Appointment">
                 <header>
                     <button name="action_confirm" type="object" string="Confirm"/>
+                    <button name="action_ongoing" type="object" string="Ongoing"/>
+                    <button name="action_done" type="object" string="done"/>
+                    <button name="action_cancel" type="object" string="Cancel"/>
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>

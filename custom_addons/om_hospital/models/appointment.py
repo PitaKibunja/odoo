@@ -25,5 +25,5 @@ class HospitalAppointment(models.Model):
 
     def action_confirm(self):
         for rec in self:
-            print('Button has been clicked', self,rec)
-            print('Reference...', self.reference)
+            rec.state='confirmed'
+
