@@ -27,3 +27,15 @@ class HospitalAppointment(models.Model):
         for rec in self:
             rec.state='confirmed'
 
+    def action_ongoing(self):
+        for rec in self:
+            rec.state='ongoing'
+
+    def action_done(self):
+        for rec in self:
+            rec.state='done'
+
+    def action_cancel(self):
+        for rec in self:
+            rec.state='cancel'
+
