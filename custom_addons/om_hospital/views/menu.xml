@@ -19,4 +19,12 @@
               name="Appointments"
               parent="menu_frontdesk"
               action="action_hospital_appointment"/>
+    <menuitem id="menu_configuration"
+              name="Configuration"
+              sequence="100"
+              parent="menu_hospital_root"/>
+    <menuitem id="menu_patient_tag"
+              name="Tags"
+              parent="menu_configuration"
+              action="action_patient_tag"/>
 </odoo>
