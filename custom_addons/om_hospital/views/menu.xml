@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_hospital_root" name="HMS" sequence="35"/>
+    <menuitem id="menu_hospital_root"
+              web_icon="om_hospital,static/description/hospital_icon.png"
+              name="HMS"
+              sequence="35"/>
     <menuitem id="menu_frontdesk"
               name="Front Desk"
               parent="menu_hospital_root"/>
